@@ -78,12 +78,15 @@ export default class Cpu extends Component {
   render() {
     return (
       <div className='wrapper'>
-        <PluginIcon /> {this.state.cpuLoad}
+        <PluginIcon /> <div className="cpu-load">{this.state.cpuLoad}</div>
 
         <style jsx>{`
           .wrapper {
             display: flex;
             align-items: center;
+          }
+          .wrapper > .cpu-load {
+            width: 6em;
           }
         `}</style>
       </div>

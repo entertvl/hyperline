@@ -48,21 +48,27 @@ export default class Network extends Component {
     this.getSpeed()
     this.interval = setInterval(() => this.getSpeed(), 1500)
   }
-
+  
   componentWillUnmount() {
     clearInterval(this.interval)
   }
-
-  calculate(data) {
-    const rawData = data / 1024
-    return (rawData > 0 ? rawData : 0).toFixed()
+  
+  getReadableSize(size) {
+    var i = -1
+    var byteUnits = ['Kbps', 'Mbps', 'Gbps', 'Tbps']
+    do {
+        size /= 1024
+        i++
+    } while (size > 1024)
+    
+    return Math.max(size, 0.1).toFixed(2).padStart(6) + byteUnits[i]
   }
 
   getSpeed() {
     networkStats().then(data =>
       this.setState({
-        download: this.calculate(data.rx_sec),
-        upload: this.calculate(data.tx_sec)
+        download: this.getReadableSize(data.rx_sec),
+        upload: this.getReadableSize(data.tx_sec)
       })
     )
   }
@@ -71,12 +77,16 @@ export default class Network extends Component {
     const { download, upload } = this.state
     return (
       <div className='wrapper'>
-        <PluginIcon /> {download}kB/s {upload}kB/s
+        <PluginIcon /> <span className="speed">{download}</span>&nbsp;/<span className="speed">{upload}</span>
 
         <style jsx>{`
           .wrapper {
             display: flex;
             align-items: center;
+          }
+          .wrapper > .speed {
+            text-align: right;
+            width: 7em;
           }
         `}</style>
       </div>

@@ -49,8 +49,7 @@ export default class Memory extends Component {
     super(props)
 
     this.state = {
-      activeMemory: 0,
-      totalMemory: 0
+      availableMemory: 0
     }
 
     this.getMemory = this.getMemory.bind(this)
@@ -68,13 +67,10 @@ export default class Memory extends Component {
 
   getMemory() {
     return memoryData().then(memory => {
-      const totalMemory = this.getMb(memory.total)
-      const activeMemory = this.getMb(memory.active)
-      const totalWidth = totalMemory.toString().length
+      const availableMemory = this.getReadableSize(memory.available)
 
       return {
-        activeMemory: leftPad(activeMemory, totalWidth, 0),
-        totalMemory
+        availableMemory: availableMemory
       }
     })
   }
@@ -83,20 +79,30 @@ export default class Memory extends Component {
     return this.getMemory().then(data => this.setState(data))
   }
 
-  getMb(bytes) {
-    // 1024 * 1024 = 1048576
-    return (bytes / 1048576).toFixed(0)
+  getReadableSize(size) {
+    var i = -1
+    var byteUnits = ['KB', 'MB', 'GB', 'TB']
+    do {
+        size /= 1024
+        i++
+    } while (size > 1024)
+    
+    return Math.max(size, 0.1).toFixed(2).padStart(6) + byteUnits[i]
   }
-
+  // <span className="memory">{this.state.activeMemory}</span>&nbsp;/<span className="memory">{this.state.totalMemory}</span> 
   render() {
     return (
       <div className='wrapper'>
-        <PluginIcon /> {this.state.activeMemory}MB / {this.state.totalMemory}MB
+        <PluginIcon /> <span className="memory">{this.state.availableMemory}</span>
 
         <style jsx>{`
           .wrapper {
             display: flex;
             align-items: center;
+          }
+          .wrapper > .memory {
+            text-align: right;
+            width: 5em;
           }
         `}</style>
       </div>
