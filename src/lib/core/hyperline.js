@@ -25,16 +25,21 @@ class HyperLine extends Component {
           .line {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             position: absolute;
-            overflow: hidden;
             bottom: 0;
+            left: 0;
+            right: 0;
             width: 100%;
-            height: 18px;
-            font: bold 10px Monospace;
+            height: 24px;
+            overflow: hidden;
+            font-size: 0.725rem;
+            // Because it will be overwritten by hyper configuration
+            font-family: "Roboto mono Medium for Powerline" !important;
+            font-weight: bold;
             pointer-events: none;
-            background: rgba(0, 0, 0, 0.08);
-            margin: 2px 0;
-            padding: 0 10px;
+            background: rgba(200, 200, 200, .05);
+            padding: 0;
           },
           .wrapper {
             display: flex;
